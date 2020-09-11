@@ -1,3 +1,4 @@
+import { hot } from 'react-hot-loader/root'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -16,10 +17,12 @@ const Header = styled.header`
   color: white;
 `
 
-export default function App() {
+export function App() {
   return (
     <OuterDiv>
       <Header>GitHub Issues Page</Header>
     </OuterDiv>
   )
 }
+
+export default hot(App)
