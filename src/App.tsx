@@ -1,6 +1,7 @@
 import { hot } from 'react-hot-loader/root'
 import React from 'react'
 import styled from 'styled-components'
+import Issues from './components/Issues'
 
 const OuterDiv = styled.div`
   text-align: left;
@@ -21,6 +22,7 @@ export function App() {
   return (
     <OuterDiv>
       <Header>GitHub Issues Page</Header>
+      <Issues repo="facebook/react" />
     </OuterDiv>
   )
 }
