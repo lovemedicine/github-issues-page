@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { IssueState } from './Issue'
+import { IssueData } from '../api'
 
 const OuterDiv = styled.div`
   background-color: #f8f8f8;
@@ -11,7 +11,7 @@ const OuterDiv = styled.div`
   border-top-right-radius: 5px;
 `
 
-export default function IssuesHeader({ error, issues, loading }: IssuesHeaderProps) {
+export default function IssuesListHeader({ error, count, issues, loading }: IssuesListHeaderProps) {
   let message
 
   if (error) {
@@ -20,8 +20,8 @@ export default function IssuesHeader({ error, issues, loading }: IssuesHeaderPro
     message = 'Loading issues...'
   } else if (issues && issues.length === 0) {
     message = 'No open issues'
-  } else if (issues && issues.length > 0) {
-    message = issues.length + ' open'
+  } else if (issues && issues.length > 0 && count) {
+    message = `Showing ${issues.length} issues out of ${count}`
   }
 
   return (
@@ -31,8 +31,9 @@ export default function IssuesHeader({ error, issues, loading }: IssuesHeaderPro
   )
 }
 
-interface IssuesHeaderProps {
+interface IssuesListHeaderProps {
   error: any,
-  issues: IssueState[] | null,
+  count: number | null,
+  issues: IssueData[] | null,
   loading: boolean
 }

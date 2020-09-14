@@ -2,21 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
 import { VscComment } from 'react-icons/vsc'
-import IssueLabel, { IssueLabelState } from './IssueLabel'
-
-export interface IssueState {
-  id: string,
-  title: string,
-  number: number,
-  user: {
-    login: string,
-    html_url: string
-  },
-  labels: IssueLabelState[],
-  comments: number
-  html_url: string,
-  created_at: string
-}
+import IssueLabel from './IssueLabel'
+import { IssueData } from '../api'
+import { IssueLinkProps } from './IssueLink'
 
 const OuterDiv = styled.div`
   padding: 1em;
@@ -25,11 +13,6 @@ const OuterDiv = styled.div`
   &:hover {
     background-color: #f8f8f8;
   }
-`
-
-const TitleLink = styled.a`
-  font-weight: bold;
-  margin-bottom: 0.1em;
 `
 
 const InfoDiv = styled.div`
@@ -59,8 +42,8 @@ const CommentsDiv = styled.div`
   }
 `
 
-export default function Issue({ issue }: IssueProps) {
-  const { title, number, user, labels, comments, html_url, created_at } = issue
+export default function Issue({ issue, IssueLink }: IssueProps) {
+  const { title, number, user, labels, comments, created_at } = issue
   const timeAgo = moment(created_at).fromNow()
 
   return (
@@ -71,11 +54,9 @@ export default function Issue({ issue }: IssueProps) {
         </CommentsDiv>
       }
 
-      <TitleLink 
-        href={html_url} 
-        target="_blank" 
-        rel="noopener noreferrer"
-      >{ title }</TitleLink>
+      <IssueLink
+        number={number}
+        title={title} />
 
       { labels.map(label => (
         <IssueLabel key={label.name} label={label} />
@@ -89,5 +70,6 @@ export default function Issue({ issue }: IssueProps) {
 }
 
 interface IssueProps {
-  issue: IssueState
+  issue: IssueData,
+  IssueLink: React.FunctionComponent<IssueLinkProps>
 }

@@ -1,11 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-
-export interface IssueLabelState {
-  name: string,
-  description: string,
-  color: string
-}
+import { IssueLabelData } from '../api'
 
 export function isLightColor(color: string): boolean {  
   const r = parseInt(color.slice(0, 2), 16)
@@ -48,5 +43,5 @@ export default function IssueLabel({ label }: IssueLabelProps) {
 }
 
 interface IssueLabelProps {
-  label: IssueLabelState
+  label: IssueLabelData
 }

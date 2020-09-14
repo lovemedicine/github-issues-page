@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import RepoLink from './RepoLink'
-import IssuesHeader from './IssuesHeader'
-import Issue, { IssueState } from './Issue'
 import styled from 'styled-components'
-import api from '../api'
+import RepoLink from './RepoLink'
+import IssuesListHeader from './IssuesListHeader'
+import IssuesList from './IssuesList'
+import IssueDetails from './IssueDetails'
+import { IssueLinkProps } from './IssueLink'
+import { IssuesLinkProps } from './IssuesLink'
+import api, { IssueData } from '../api'
 
 const OuterDiv = styled.div`
   padding: 1em;
@@ -13,19 +16,21 @@ const OuterDiv = styled.div`
   }
 `
 
-const IssueListDiv = styled.div`
-  border-left: 1px solid #eee;
-  border-right: 1px solid #eee;
-`
+export default function Issues({ user, repo, number, IssueLink, IssuesLink }: IssuesProps) {
+  const repoPath = `${user}/${repo}`
 
-export default function Issues({ repo }: IssuesProps) {
   const [loading, setLoading] = useState(false)
-  const [issues, setIssues] = useState<IssueState[] | null>(null)
+  const [issues, setIssues] = useState<IssueData[] | null>(null)
+  const [count, setCount] = useState<number | null>(null)
   const [error, setError] = useState()
 
   useEffect(() => {
     setLoading(true)
-    api.fetchRepoIssues(repo)
+    api.fetchRepo(repoPath)
+      .then(repo => {
+        setCount(repo.open_issues_count)
+      })
+      .then(() => api.fetchRepoIssues(repoPath))
       .then(issues => {
         setIssues(issues)
         setLoading(false)
@@ -34,26 +39,40 @@ export default function Issues({ repo }: IssuesProps) {
         setError(err)
         setLoading(false)
       })
-  }, [repo])
+  }, [repoPath])
+
+  const issue = number ? issues?.find(issue => issue.number === Number(number)) : null
 
   return (
     <OuterDiv>
       <h2>
-        Issues for <RepoLink repo={repo} />
+        { number 
+          ? <IssuesLink repoPath={repoPath} /> 
+          : <RepoLink repoPath={repoPath} /> 
+        }
       </h2>
 
-      <IssuesHeader issues={issues} error={error} loading={loading} />
-
-      { issues && issues?.length > 0 && 
-        <IssueListDiv role="list">
-          { issues.map(issue => <Issue key={issue.id} issue={issue} />) }
-        </IssueListDiv>
+      { number && issue &&
+        <IssueDetails user={user} repo={repo} issue={issue} />
       }
 
+      { !number &&
+        <>
+          <IssuesListHeader count={count} issues={issues} error={error} loading={loading} />
+          { issues && issues?.length > 0 && 
+            <IssuesList issues={issues} IssueLink={IssueLink} />
+          }
+        </>
+      
+      }
     </OuterDiv>
   )
 }
 
 interface IssuesProps {
-  repo: string
+  user: string,
+  repo: string,
+  number: string,
+  IssueLink: React.FunctionComponent<IssueLinkProps>
+  IssuesLink: React.FunctionComponent<IssuesLinkProps>
 }

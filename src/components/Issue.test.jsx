@@ -3,20 +3,25 @@ import { render } from '@testing-library/react'
 import 'jest-styled-components'
 import moment from 'moment'
 import Issue from './Issue'
-import { issues, } from '../testData'
+import { issues } from '../testData'
+import { createIssueLink } from '../testHelpers'
 
 describe('Issue', () => {
   let container, getByText, getByTestId
   let issue = issues[0]
+  const repoPath = "someuser/somerepo"
+  const IssueLink = createIssueLink(repoPath)
 
   beforeEach(() => {
-    ({ container, getByText, getByTestId } = render(<Issue issue={issue} />))
+    ({ container, getByText, getByTestId } = render(
+      <Issue issue={issue} IssueLink={IssueLink} />
+    ))
   })
 
   it('renders title link', () => {
     const title = getByText(issue.title)
     expect(title).toBeInTheDocument()
-    expect(title).toHaveAttribute('href', issue.html_url)
+    expect(title).toHaveAttribute('href', `/${repoPath}/issues/${issue.number}`)
   })
 
   it('renders labels', () => {

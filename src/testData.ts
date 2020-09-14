@@ -1,4 +1,4 @@
-import { IssueData } from './api'
+import { IssueData, CommentData } from './api'
 
 export const issues: IssueData[] = [
   { 
@@ -37,4 +37,16 @@ export const issues: IssueData[] = [
     html_url: "https://www/example.com/issue",
     created_at: "2020-09-10T15:41:32Z"
   },    
+]
+
+export const comments: CommentData[] = [
+  {
+    id: 123,
+    body: "here's my interesting comment",
+    user: {
+      login: "someuser",
+      html_url: "https://www.example.com/someuser"
+    },
+    created_at: "2020-09-11T16:41:32Z"
+  }
 ]

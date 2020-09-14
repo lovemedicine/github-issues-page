@@ -1,13 +1,16 @@
 import { hot } from 'react-hot-loader/root'
 import React from 'react'
 import styled from 'styled-components'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Issues from './components/Issues'
+import createIssueLink from './components/IssueLink'
+import IssuesLink from './components/IssuesLink'
 
 const OuterDiv = styled.div`
   text-align: left;
 `
 
-const Header = styled.header`
+const PageHeader = styled.header`
   background-color: #282c34;
   min-height: 10vh;
   display: flex;
@@ -20,10 +23,26 @@ const Header = styled.header`
 
 export function App() {
   return (
-    <OuterDiv>
-      <Header>GitHub Issues Page</Header>
-      <Issues repo="facebook/react" />
-    </OuterDiv>
+    <Router>
+      <OuterDiv>
+        <PageHeader>GitHub Issues Page</PageHeader>
+
+        <Switch>
+          <Route
+            path={["/:user/:repo/issues/:number", "/:user/:repo"]}
+            render={props => {
+              const repoPath = `${props.match.params.user}/${props.match.params.repo}`
+              return (
+                <Issues
+                  {...props.match.params}
+                  IssueLink={createIssueLink(repoPath)}
+                  IssuesLink={IssuesLink} />
+              )
+            }}
+          />
+        </Switch>
+      </OuterDiv>
+    </Router>
   )
 }
 

@@ -5,18 +5,18 @@ const Link = styled.a`
   text-decoration: none;
 `
 
-export default function RepoLink({ repo }: RepoLinkProps) {
+export default function RepoLink({ repoPath }: RepoLinkProps) {
   return (
     <Link 
-      href={`https://github.com/${repo}`} 
+      href={`https://github.com/${repoPath}`} 
       target="_blank" 
       rel="noopener noreferrer"
     >
-      { repo }
+      { repoPath }
     </Link>
   )
 }
 
 interface RepoLinkProps {
-  repo: string
+  repoPath: string
 }
